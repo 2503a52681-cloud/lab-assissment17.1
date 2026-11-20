@@ -1,0 +1,379 @@
+LAB-17.1
+
+TASK-1
+
+Task 1 – Customer Data Cleaning
+Task:
+Use AI to generate a Python script for cleaning a customer
+dataset.
+Instructions:
+ Handle missing values in columns (age, income, city).
+ Remove duplicate records.
+ Standardize text values (e.g., city names in lowercase).
+ Encode categorical variables (gender, city).
+Sample Code:
+import pandas as pd
+data = pd.read_csv(&quot;shopping_trends.csv&quot;)
+print(data.head())
+Dataset link:
+https://www.kaggle.com/datasets/iamsouravbanerjee/customer-
+shopping-trends-dataset?select=shopping_trends.csv
+Expected Output:
+ A cleaned Pandas data frame ready for analysis.
+
+PROMPT:
+
+Write a simple Python program using Pandas to clean `shopping_trends.csv`. Handle missing values, remove duplicate records, convert city names to lowercase, and encode Gender and City using Label Encoding. Display the original and cleaned data and save the result as `cleaned_customer_data.csv`. Use beginner-friendly code with comments and make sure it runs in VS Code. Check the actual dataset column names before processing.
+
+CODE:
+
+
+import pandas as pd
+from sklearn.preprocessing import LabelEncoder
+
+# Read dataset
+data = pd.read_csv("shopping_trends.csv")
+
+print("Original Dataset:")
+print(data.head())
+
+# Handle missing values
+data['Age'] = data['Age'].fillna(data['Age'].mean())
+
+# Check actual income and city columns
+if 'Income' in data.columns:
+    data['Income'] = data['Income'].fillna(data['Income'].mean())
+
+if 'City' in data.columns:
+    data['City'] = data['City'].fillna('Unknown')
+    data['City'] = data['City'].str.lower()
+
+# Remove duplicate records
+data = data.drop_duplicates()
+
+# Encode categorical columns
+encoder = LabelEncoder()
+
+for col in ['Gender', 'City']:
+    if col in data.columns:
+        data[col] = encoder.fit_transform(data[col].astype(str))
+
+# Display cleaned dataset
+print("\nCleaned Dataset:")
+print(data.head())
+
+print("\nMissing Values:")
+print(data.isnull().sum())
+
+print("\nFinal Dataset Shape:")
+print(data.shape)
+
+# Save cleaned dataset
+data.to_csv("cleaned_customer_data.csv", index=False)
+
+print("\nCustomer data cleaning completed!")
+print("File saved successfully!")
+
+
+OUTPUT:
+
+(.venv) PS C:\LAB-17.1 AI> py customer_cleaning.py
+   Customer ID  Age  ...  Gender_female  Gender_male
+0            1   55  ...              0            1
+1            2   19  ...              0            1
+2            3   50  ...              0            1
+3            4   21  ...              0            1
+4            5   45  ...              0            1
+
+[5 rows x 20 columns]
+
+TASK-2
+
+Task 2 – Sales Data Preprocessing
+Task:
+Preprocess sales transaction data using AI assistance.
+
+Week9 - Monday
+
+Instructions:
+ Convert date columns into datetime format.
+ Create new features (month, year, day of week).
+ Normalize sales amount column.
+ Detect and handle outliers in dataset.
+Sample Code:
+import pandas as pd
+data = pd.read_csv(&quot;sales_data.csv&quot;)
+print(data.head())
+Dataset link:
+https://www.kaggle.com/datasets/vinothkannaece/sales-
+dataset?select=sales_data.csv
+Expected Output:
+ A transformed dataset with time-based features and
+normalized values.
+
+PROMPT:
+
+Write a simple beginner-friendly Python program using Pandas to preprocess `sales_data.csv`. Convert date columns into datetime format, create Month, Year, and Day of Week columns, normalize the sales amount, detect and remove outliers using the IQR method, display the original and processed data, and save the result as `preprocessed_sales_data.csv`. Check the actual column names and use simple code with comments that runs in VS Code.
+
+CODE:
+
+
+import pandas as pd
+
+# Create sample sales dataset
+data = pd.DataFrame({
+    'Date': ['2025-01-10', '2025-02-15', '2025-03-20',
+             '2025-04-12', '2025-05-18', '2025-06-22',
+             '2025-07-10', '2025-08-15'],
+    'Sales': [1000, 2000, 1500, 3000, 2500, 1800, 4000, 50000]
+})
+
+print("Original Dataset:")
+print(data)
+
+# Convert date into datetime
+data['Date'] = pd.to_datetime(data['Date'])
+
+# Create date features
+data['Month'] = data['Date'].dt.month
+data['Year'] = data['Date'].dt.year
+data['Day_of_Week'] = data['Date'].dt.day_name()
+
+# Normalize sales
+data['Normalized_Sales'] = (
+    (data['Sales'] - data['Sales'].min()) /
+    (data['Sales'].max() - data['Sales'].min())
+)
+
+# Detect and remove outliers
+Q1 = data['Sales'].quantile(0.25)
+Q3 = data['Sales'].quantile(0.75)
+IQR = Q3 - Q1
+
+data = data[
+    (data['Sales'] >= Q1 - 1.5 * IQR) &
+    (data['Sales'] <= Q3 + 1.5 * IQR)
+]
+
+print("\nPreprocessed Dataset:")
+print(data)
+
+# Save output
+data.to_csv("preprocessed_sales_data.csv", index=False)
+
+print("\nPreprocessing Completed!")
+print("Output file saved successfully!")
+
+
+OUTPUT:
+
+  Date  Sales
+0  2025-01-10   1000
+1  2025-02-15   2000
+2  2025-03-20   1500
+3  2025-04-12   3000
+4  2025-05-18   2500
+5  2025-06-22   1800
+6  2025-07-10   4000
+7  2025-08-15  50000
+
+Preprocessed Dataset:
+        Date  ...  Normalized_Sales
+0 2025-01-10  ...          0.000000
+1 2025-02-15  ...          0.020408
+2 2025-03-20  ...          0.010204
+3 2025-04-12  ...          0.040816
+4 2025-05-18  ...          0.030612
+5 2025-06-22  ...          0.016327
+6 2025-07-10  ...          0.061224
+
+[7 rows x 6 columns]
+
+Preprocessing Completed!
+Output file saved successfully!
+
+TASK-3
+Task 3 – Healthcare Data Preparation
+Task:
+Clean and preprocess a healthcare dataset using AI scripts.
+Instructions:
+ Handle missing values in blood_pressure, cholesterol.
+ Encode categorical features
+ Scale numerical features (min-max or standard scaling).
+ Split dataset into training and testing sets.
+Dataset link :
+https://www.kaggle.com/datasets/abdallaahmed77/healthcare-risk-
+factors-dataset
+
+
+PROMPT:
+
+Write a simple beginner-friendly Python program using Pandas and Scikit-learn to preprocess a healthcare dataset. Handle missing values in blood_pressure and cholesterol, encode categorical columns using Label Encoding, scale numerical columns using Min-Max Scaling, and split the dataset into 80% training and 20% testing data. Display the cleaned dataset, training data shape, and testing data shape. Save the cleaned dataset as healthcare_cleaned.csv. Use simple code with comments.
+
+CODE:
+
+
+import pandas as pd
+from sklearn.preprocessing import LabelEncoder, MinMaxScaler
+from sklearn.model_selection import train_test_split
+
+# Read dataset
+data = pd.read_csv("healthcare.csv")
+
+print("Original Dataset:")
+print(data.head())
+
+# Handle missing values
+for col in ['blood_pressure', 'cholesterol']:
+    if col in data.columns:
+        data[col] = data[col].fillna(data[col].mean())
+
+# Encode categorical columns
+encoder = LabelEncoder()
+
+for col in data.select_dtypes(include='object').columns:
+    data[col] = encoder.fit_transform(data[col].astype(str))
+
+# Scale numerical columns
+scaler = MinMaxScaler()
+data[data.select_dtypes(include='number').columns] = scaler.fit_transform(
+    data.select_dtypes(include='number')
+)
+
+# Split dataset
+X = data.iloc[:, :-1]
+y = data.iloc[:, -1]
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+
+print("\nCleaned Dataset:")
+print(data.head())
+
+print("\nTraining Data Shape:", X_train.shape)
+print("Testing Data Shape:", X_test.shape)
+
+# Save cleaned dataset
+data.to_csv("healthcare_cleaned.csv", index=False)
+
+print("\nHealthcare Data Preparation Completed!")
+
+OUTPUT:
+
+Cleaned Dataset:
+        Age  Gender  ...  random_notes  noise_col
+0  0.455696     0.5  ...      1.000000   0.312605
+1  0.151899     0.5  ...      0.666667   0.455579
+2  0.506329     1.0  ...      0.666667   0.580072
+3  0.594937     1.0  ...      1.000000   0.518549
+4  0.708861     0.0  ...      1.000000   0.519281
+
+[5 rows x 20 columns]
+
+Training Data Shape: (24000, 19)
+Testing Data Shape: (6000, 19)
+
+Healthcare Data Preparation Completed!
+
+TASK-4
+Task 4 – Employee Salary Data Preprocessing
+Task:
+Clean and preprocess an employee salary dataset using AI scripts.
+Instructions:
+• Handle missing values
+• Detect and remove salary outliers.
+• Standardize department names (lowercase).
+• Apply label encoding to job location, department.
+Dataset link:
+https://www.kaggle.com/code/vishantmathur/employee-salary
+
+Expected Output:
+• A structured dataset ready for HR analytics.
+
+
+
+PROMPT:
+
+Write a simple beginner-friendly Python program using Pandas and Scikit-learn to clean an employee salary dataset. Handle missing values, detect and remove salary outliers using the IQR method, convert department names to lowercase, and encode Job Location and Department using Label Encoding. Display the original and cleaned datasets and save the result as employee_cleaned.csv. Use simple code with comments that runs in VS Code.
+
+CODE:
+
+
+import pandas as pd
+from sklearn.preprocessing import LabelEncoder
+
+# Read dataset
+data = pd.read_csv("employee.csv")
+
+print("Original Dataset:")
+print(data.head())
+
+# Handle missing values
+for col in data.columns:
+    if data[col].dtype == 'object':
+        data[col] = data[col].fillna("Unknown")
+    else:
+        data[col] = data[col].fillna(data[col].median())
+
+# Standardize department names
+if 'Department' in data.columns:
+    data['Department'] = data['Department'].astype(str).str.lower()
+
+# Detect and remove salary outliers
+if 'Salary' in data.columns:
+    Q1 = data['Salary'].quantile(0.25)
+    Q3 = data['Salary'].quantile(0.75)
+    IQR = Q3 - Q1
+
+    data = data[
+        (data['Salary'] >= Q1 - 1.5 * IQR) &
+        (data['Salary'] <= Q3 + 1.5 * IQR)
+    ]
+
+# Encode categorical columns
+encoder = LabelEncoder()
+
+for col in ['Job Location', 'Department']:
+    if col in data.columns:
+        data[col] = encoder.fit_transform(data[col].astype(str))
+
+# Display cleaned data
+print("\nCleaned Dataset:")
+print(data.head())
+
+print("\nFinal Dataset Shape:")
+print(data.shape)
+
+# Save cleaned dataset
+data.to_csv("employee_cleaned.csv", index=False)
+
+print("\nEmployee Data Cleaning Completed!")
+print("File saved successfully!")
+
+
+OUTPUT:
+
+Original Dataset:
+  Employee Department Job Location  Salary
+0 John     HR         Hyderabad     40000
+1 Ram      IT         Chennai       60000
+2 Priya    Finance    Mumbai        50000
+3 Ravi     IT         Hyderabad     70000
+4 Anu      HR         Chennai       45000
+
+Cleaned Dataset:
+  Employee  Department  Job Location  Salary
+0 John      1           1             40000
+1 Ram       2           0             60000
+2 Priya     0           2             50000
+3 Ravi      2           1             70000
+4 Anu       1           0             45000
+
+Final Dataset Shape:
+(5, 4)
+
+Employee Data Cleaning Completed!
+File saved successfully!
+
+TASK-5
